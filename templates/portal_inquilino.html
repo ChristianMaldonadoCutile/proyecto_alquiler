@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Portal — Sistema de Alquiler</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/static/css/estilos.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand">
+                <i class="bi bi-person-circle"></i> Portal Inquilino
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="nav-link text-white">
+                    <i class="bi bi-person"></i> {{ inquilino.nombre }}
+                </span>
+                <a class="nav-link" href="/inquilino/logout">
+                    <i class="bi bi-box-arrow-right"></i> Salir
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+
+        <!-- Datos personales -->
+        <div class="card border-0 shadow-sm p-4 mb-4">
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-person-badge text-primary"></i> Mis datos
+            </h5>
+            <div class="row">
+                <div class="col-md-3">
+                    <small class="text-muted">Nombre</small>
+                    <p class="fw-bold">{{ inquilino.nombre }}</p>
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted">Carnet</small>
+                    <p class="fw-bold">{{ inquilino.dni }}</p>
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted">Correo</small>
+                    <p class="fw-bold">{{ inquilino.correo }}</p>
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted">Teléfono</small>
+                    <p class="fw-bold">{{ inquilino.telefono or "—" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen de pagos -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="card tarjeta-resumen tarjeta-naranja p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-1 opacity-75">Pagos pendientes</p>
+                            <h2 class="mb-0 fw-bold">{{ pendientes|length }}</h2>
+                        </div>
+                        <i class="bi bi-hourglass-split icono"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card tarjeta-resumen tarjeta-rojo p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-1 opacity-75">Pagos vencidos</p>
+                            <h2 class="mb-0 fw-bold">{{ vencidos|length }}</h2>
+                        </div>
+                        <i class="bi bi-exclamation-circle icono"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card tarjeta-resumen tarjeta-verde p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-1 opacity-75">Pagos realizados</p>
+                            <h2 class="mb-0 fw-bold">{{ pagados|length }}</h2>
+                        </div>
+                        <i class="bi bi-check-circle icono"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de pagos -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-cash-coin text-primary"></i> Mis Pagos
+                </h5>
+            </div>
+            <div class="card tabla-sistema border-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Habitación</th>
+                            <th>Monto</th>
+                            <th>Vencimiento</th>
+                            <th>Fecha pago</th>
+                            <th>Método</th>
+                            <th>Estado</th>
+                            <th>Recibo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pago in todos_pagos %}
+                        <tr>
+                            <td>{{ pago.id }}</td>
+                            <td>Hab. {{ pago.contrato.habitacion.numero }}</td>
+                            <td>Bs. {{ pago.monto }}</td>
+                            <td>{{ pago.fecha_vencimiento.strftime("%d/%m/%Y") }}</td>
+                            <td>
+                                {% if pago.fecha_pago %}
+                                {{ pago.fecha_pago.strftime("%d/%m/%Y") }}
+                                {% else %}
+                                —
+                                {% endif %}
+                            </td>
+                            <td>{{ pago.metodo.value.capitalize() if pago.metodo else "—" }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if pago.estado == 'pagado' %}bg-success
+                                    {% elif pago.estado == 'pendiente' %}bg-warning text-dark
+                                    {% elif pago.estado == 'vencido' %}bg-danger
+                                    {% endif %}">
+                                    {{ pago.estado.capitalize() }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if pago.estado == "pagado" %}
+                                <a href="/inquilino/pagos/{{ pago.id }}/recibo" class="btn btn-sm btn-outline-secondary"
+                                    target="_blank">
+                                    <i class="bi bi-file-pdf"></i>
+                                </a>
+                                {% else %}
+                                —
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-3"></i>
+                                <p class="mt-2">No tenés pagos registrados</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

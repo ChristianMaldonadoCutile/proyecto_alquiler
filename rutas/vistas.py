@@ -56,19 +56,35 @@ async def procesar_login(
     contrasena: str = Form(...),
     db: Session = Depends(obtener_db)
 ):
+    # Intentar login como propietario
     try:
         resultado = ctrl_propietario.autenticar(db, correo, contrasena)
         respuesta = RedirectResponse(url="/vistas/inicio", status_code=302)
         respuesta.set_cookie(key="access_token", value=resultado["access_token"], httponly=True)
         return respuesta
     except:
-        return tr(request, "login.html", {"mensaje_error": "Correo o contraseña incorrectos"})
+        pass
+
+    # Intentar login como inquilino
+    try:
+        resultado = ctrl_inquilino.autenticar(db, correo, contrasena)
+        respuesta = RedirectResponse(url="/inquilino/portal", status_code=302)
+        respuesta.set_cookie(key="token_inquilino", value=resultado["access_token"], httponly=True)
+        return respuesta
+    except:
+        pass
+
+    # Si ninguno funcionó
+    return tr(request, "login.html", {
+        "mensaje_error": "Correo o contraseña incorrectos"
+    })
 
 
 @enrutador.get("/logout")
 async def logout():
     respuesta = RedirectResponse(url="/vistas/login", status_code=302)
     respuesta.delete_cookie("access_token")
+    respuesta.delete_cookie("token_inquilino")
     return respuesta
 
 
@@ -210,6 +226,7 @@ async def procesar_crear_inquilino(
     telefono: Optional[str] = Form(None),
     contacto_emergencia: Optional[str] = Form(None),
     telefono_emergencia: Optional[str] = Form(None),
+    contrasena: str = Form(...),
     db: Session = Depends(obtener_db)
 ):
     propietario = verificar_sesion(request, db)
@@ -220,7 +237,8 @@ async def procesar_crear_inquilino(
         datos = InquilinoCrear(
             nombre=nombre, dni=dni, correo=correo, telefono=telefono,
             contacto_emergencia=contacto_emergencia,
-            telefono_emergencia=telefono_emergencia
+            telefono_emergencia=telefono_emergencia,
+            contrasena=contrasena
         )
         ctrl_inquilino.crear(db, datos)
         return RedirectResponse(url="/vistas/inquilinos", status_code=302)
@@ -248,6 +266,7 @@ async def procesar_editar_inquilino(
     telefono: Optional[str] = Form(None),
     contacto_emergencia: Optional[str] = Form(None),
     telefono_emergencia: Optional[str] = Form(None),
+    contrasena: Optional[str] = Form(None),
     db: Session = Depends(obtener_db)
 ):
     propietario = verificar_sesion(request, db)
@@ -257,7 +276,8 @@ async def procesar_editar_inquilino(
     datos = InquilinoActualizar(
         nombre=nombre, correo=correo, telefono=telefono,
         contacto_emergencia=contacto_emergencia,
-        telefono_emergencia=telefono_emergencia
+        telefono_emergencia=telefono_emergencia,
+        contrasena=contrasena if contrasena else None
     )
     ctrl_inquilino.actualizar(db, inquilino_id, datos)
     return RedirectResponse(url="/vistas/inquilinos", status_code=302)

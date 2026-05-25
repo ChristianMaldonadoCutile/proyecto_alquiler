@@ -17,6 +17,7 @@ from rutas.reporte import enrutador as ruta_reporte
 
 # Importar rutas de vistas
 from rutas.vistas import enrutador as ruta_vistas
+from rutas.inquilino_portal import enrutador as ruta_inquilino_portal
 
 # Importar scheduler
 from servicios.servicio_notificacion import iniciar_scheduler
@@ -50,6 +51,7 @@ app.include_router(ruta_reporte)
 
 # Registrar rutas de vistas
 app.include_router(ruta_vistas)
+app.include_router(ruta_inquilino_portal)
 
 
 @app.get("/")
