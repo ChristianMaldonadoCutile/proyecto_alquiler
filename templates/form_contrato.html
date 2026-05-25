@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block titulo %}Nuevo Contrato{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="form-card">
+            <h4 class="fw-bold mb-4 text-dark">
+                <i class="bi bi-file-text"></i> Nuevo Contrato
+            </h4>
+
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label">Habitación</label>
+                    <select name="habitacion_id" class="form-select" required>
+                        <option value="">Seleccioná una habitación</option>
+                        {% for habitacion in habitaciones %}
+                        <option value="{{ habitacion.id }}">
+                            Hab. {{ habitacion.numero }} — Piso {{ habitacion.piso or "—" }}
+                            — Bs. {{ habitacion.precio_mensual }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Inquilino</label>
+                    <select name="inquilino_id" class="form-select" required>
+                        <option value="">Seleccioná un inquilino</option>
+                        {% for inquilino in inquilinos %}
+                        <option value="{{ inquilino.id }}">
+                            {{ inquilino.nombre }} — DNI: {{ inquilino.dni }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Fecha inicio</label>
+                    <input type="date" name="fecha_inicio" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Fecha fin</label>
+                    <input type="date" name="fecha_fin" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Monto mensual (Bs.)</label>
+                    <input type="number" step="0.01" name="monto_mensual"
+                           class="form-control" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Día de vencimiento</label>
+                    <input type="number" name="dia_vencimiento" class="form-control"
+                           min="1" max="28" value="1" required>
+                    <small class="text-muted">Día del mes en que vence el pago (1-28)</small>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primario">
+                        <i class="bi bi-save"></i> Crear Contrato
+                    </button>
+                    <a href="/vistas/contratos" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block titulo %}Contratos — Sistema de Alquiler{% endblock %}
+
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark">
+        <i class="bi bi-file-text"></i> Contratos
+    </h3>
+    <a href="/vistas/contratos/crear" class="btn btn-primario">
+        <i class="bi bi-plus-circle"></i> Nuevo Contrato
+    </a>
+</div>
+
+<!-- Tabla -->
+<div class="card tabla-sistema border-0">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Habitación</th>
+                <th>Inquilino</th>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
+                <th>Monto mensual</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contrato in contratos %}
+            <tr>
+                <td>{{ contrato.id }}</td>
+                <td><strong>Hab. {{ contrato.habitacion.numero }}</strong></td>
+                <td>{{ contrato.inquilino.nombre }}</td>
+                <td>{{ contrato.fecha_inicio.strftime("%d/%m/%Y") }}</td>
+                <td>{{ contrato.fecha_fin.strftime("%d/%m/%Y") }}</td>
+                <td>Bs. {{ contrato.monto_mensual }}</td>
+                <td>
+                    <span class="badge badge-{{ contrato.estado }}">
+                        {{ contrato.estado.capitalize() }}
+                    </span>
+                </td>
+                <td>
+                    {% if contrato.estado == "activo" %}
+                    <a href="/vistas/contratos/{{ contrato.id }}/finalizar"
+                       class="btn btn-sm btn-outline-warning"
+                       onclick="return confirm('¿Finalizar este contrato?')">
+                        <i class="bi bi-x-circle"></i>
+                    </a>
+                    {% endif %}
+                    <a href="/vistas/pagos?contrato_id={{ contrato.id }}"
+                       class="btn btn-sm btn-outline-info">
+                        <i class="bi bi-cash-coin"></i>
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox fs-3"></i>
+                    <p class="mt-2">No hay contratos registrados</p>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

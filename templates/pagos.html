@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block titulo %}Pagos — Sistema de Alquiler{% endblock %}
+
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark">
+        <i class="bi bi-cash-coin"></i> Pagos
+    </h3>
+</div>
+
+<!-- Filtros -->
+<div class="card mb-4 border-0 shadow-sm">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <select name="estado" class="form-select" onchange="this.form.submit()">
+                    <option value="">Todos los estados</option>
+                    <option value="pendiente" {% if estado_filtro == "pendiente" %}selected{% endif %}>Pendiente</option>
+                    <option value="pagado" {% if estado_filtro == "pagado" %}selected{% endif %}>Pagado</option>
+                    <option value="vencido" {% if estado_filtro == "vencido" %}selected{% endif %}>Vencido</option>
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Tabla -->
+<div class="card tabla-sistema border-0">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Contrato</th>
+                <th>Inquilino</th>
+                <th>Monto</th>
+                <th>Vencimiento</th>
+                <th>Fecha pago</th>
+                <th>Método</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pago in pagos %}
+            <tr>
+                <td>{{ pago.id }}</td>
+                <td>Contrato #{{ pago.contrato_id }}</td>
+                <td>{{ pago.contrato.inquilino.nombre }}</td>
+                <td>Bs. {{ pago.monto }}</td>
+                <td>{{ pago.fecha_vencimiento.strftime("%d/%m/%Y") }}</td>
+                <td>
+                    {% if pago.fecha_pago %}
+                        {{ pago.fecha_pago.strftime("%d/%m/%Y") }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>{{ pago.metodo.value.capitalize() if pago.metodo else "—" }}</td>
+                <td>
+                    <span class="badge badge-{{ pago.estado }}">
+                        {{ pago.estado.capitalize() }}
+                    </span>
+                </td>
+                <td>
+                    {% if pago.estado != "pagado" %}
+                    <a href="/vistas/pagos/{{ pago.id }}/registrar"
+                       class="btn btn-sm btn-outline-success">
+                        <i class="bi bi-check-circle"></i>
+                    </a>
+                    {% endif %}
+                    <a href="/vistas/pagos/{{ pago.id }}/recibo"
+                       class="btn btn-sm btn-outline-secondary" target="_blank">
+                        <i class="bi bi-file-pdf"></i>
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="9" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox fs-3"></i>
+                    <p class="mt-2">No hay pagos registrados</p>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

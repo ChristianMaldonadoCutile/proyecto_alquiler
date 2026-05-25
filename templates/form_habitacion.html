@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ "Editar" if habitacion else "Nueva" }} Habitación{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="form-card">
+            <h4 class="fw-bold mb-4 text-dark">
+                <i class="bi bi-door-open"></i>
+                {{ "Editar Habitación" if habitacion else "Nueva Habitación" }}
+            </h4>
+
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label">Número de habitación</label>
+                    <input type="text" name="numero" class="form-control"
+                           value="{{ habitacion.numero if habitacion else '' }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Piso</label>
+                    <input type="number" name="piso" class="form-control"
+                           value="{{ habitacion.piso if habitacion else '' }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Descripción</label>
+                    <textarea name="descripcion" class="form-control" rows="3">{{ habitacion.descripcion if habitacion else '' }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Precio mensual (Bs.)</label>
+                    <input type="number" step="0.01" name="precio_mensual" class="form-control"
+                           value="{{ habitacion.precio_mensual if habitacion else '' }}" required>
+                </div>
+                {% if habitacion %}
+                <div class="mb-4">
+                    <label class="form-label">Estado</label>
+                    <select name="estado" class="form-select">
+                        <option value="disponible" {% if habitacion.estado == "disponible" %}selected{% endif %}>Disponible</option>
+                        <option value="ocupada" {% if habitacion.estado == "ocupada" %}selected{% endif %}>Ocupada</option>
+                        <option value="mantenimiento" {% if habitacion.estado == "mantenimiento" %}selected{% endif %}>Mantenimiento</option>
+                    </select>
+                </div>
+                {% endif %}
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primario">
+                        <i class="bi bi-save"></i> Guardar
+                    </button>
+                    <a href="/vistas/habitaciones" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

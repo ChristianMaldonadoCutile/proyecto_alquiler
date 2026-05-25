@@ -1,0 +1,149 @@
+/* Variables */
+:root {
+    --color-primario: #2C3E50;
+    --color-secundario: #3498DB;
+    --color-exito: #27AE60;
+    --color-peligro: #E74C3C;
+    --color-advertencia: #F39C12;
+    --color-fondo: #F8F9FA;
+}
+
+/* General */
+body {
+    background-color: var(--color-fondo);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--color-primario) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.navbar-brand {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.nav-link {
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem !important;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.nav-link:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+/* Tarjetas de resumen */
+.tarjeta-resumen {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+}
+
+.tarjeta-resumen:hover {
+    transform: translateY(-4px);
+}
+
+.tarjeta-resumen .icono {
+    font-size: 2.5rem;
+    opacity: 0.85;
+}
+
+.tarjeta-azul { background: linear-gradient(135deg, #3498DB, #2980B9); color: white; }
+.tarjeta-verde { background: linear-gradient(135deg, #27AE60, #1E8449); color: white; }
+.tarjeta-naranja { background: linear-gradient(135deg, #F39C12, #D68910); color: white; }
+.tarjeta-rojo { background: linear-gradient(135deg, #E74C3C, #C0392B); color: white; }
+.tarjeta-oscura { background: linear-gradient(135deg, #2C3E50, #1A252F); color: white; }
+
+/* Tablas */
+.tabla-sistema {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+.tabla-sistema thead {
+    background-color: var(--color-primario);
+    color: white;
+}
+
+.tabla-sistema tbody tr:hover {
+    background-color: #EBF5FB;
+}
+
+/* Badges de estado */
+.badge-disponible { background-color: #27AE60; }
+.badge-ocupada { background-color: #E74C3C; }
+.badge-mantenimiento { background-color: #F39C12; }
+.badge-activo { background-color: #27AE60; }
+.badge-finalizado { background-color: #7F8C8D; }
+.badge-cancelado { background-color: #E74C3C; }
+.badge-pendiente { background-color: #F39C12; }
+.badge-pagado { background-color: #27AE60; }
+.badge-vencido { background-color: #E74C3C; }
+
+/* Formularios */
+.form-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--color-primario);
+}
+
+.btn-primario {
+    background-color: var(--color-primario);
+    border-color: var(--color-primario);
+    color: white;
+    border-radius: 8px;
+    padding: 0.5rem 1.5rem;
+}
+
+.btn-primario:hover {
+    background-color: #1A252F;
+    color: white;
+}
+
+/* Login */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2C3E50, #3498DB);
+}
+
+.login-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-card h2 {
+    color: var(--color-primario);
+    font-weight: 700;
+}
+
+/* Página de inicio */
+.bienvenida {
+    text-align: center;
+    padding: 3rem 0;
+    color: var(--color-primario);
+}
+
+.bienvenida h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}

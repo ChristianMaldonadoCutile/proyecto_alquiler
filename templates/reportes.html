@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block titulo %}Reportes — Sistema de Alquiler{% endblock %}
+
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark">
+        <i class="bi bi-bar-chart"></i> Reportes y Estadísticas
+    </h3>
+</div>
+
+<!-- Resumen financiero -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card tarjeta-resumen tarjeta-verde p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 opacity-75">Ingresos del mes</p>
+                    <h2 class="mb-0 fw-bold">Bs. {{ resumen.resumen_financiero.ingresos_mes_actual }}</h2>
+                </div>
+                <i class="bi bi-cash-coin icono"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card tarjeta-resumen tarjeta-naranja p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 opacity-75">Pendiente de cobrar</p>
+                    <h2 class="mb-0 fw-bold">Bs. {{ resumen.resumen_financiero.total_pendiente_cobrar }}</h2>
+                </div>
+                <i class="bi bi-hourglass-split icono"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card tarjeta-resumen tarjeta-rojo p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 opacity-75">Deuda vencida</p>
+                    <h2 class="mb-0 fw-bold">Bs. {{ resumen.resumen_financiero.total_deuda_vencida }}</h2>
+                </div>
+                <i class="bi bi-exclamation-circle icono"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ocupación -->
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm p-4">
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-door-open text-primary"></i> Ocupación de Habitaciones
+            </h5>
+            <div class="row text-center">
+                <div class="col-4">
+                    <h3 class="fw-bold text-success">{{ ocupacion.ocupadas }}</h3>
+                    <small class="text-muted">Ocupadas</small>
+                </div>
+                <div class="col-4">
+                    <h3 class="fw-bold text-primary">{{ ocupacion.disponibles }}</h3>
+                    <small class="text-muted">Disponibles</small>
+                </div>
+                <div class="col-4">
+                    <h3 class="fw-bold text-warning">{{ ocupacion.en_mantenimiento }}</h3>
+                    <small class="text-muted">Mantenimiento</small>
+                </div>
+            </div>
+            <div class="mt-3">
+                <div class="d-flex justify-content-between mb-1">
+                    <small>Tasa de ocupación</small>
+                    <small><strong>{{ ocupacion.tasa_ocupacion }}%</strong></small>
+                </div>
+                <div class="progress" style="height: 10px;">
+                    <div class="progress-bar bg-success"
+                         style="width: {{ ocupacion.tasa_ocupacion }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm p-4">
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-file-text text-success"></i> Contratos
+            </h5>
+            <div class="text-center py-3">
+                <h1 class="fw-bold text-success">{{ resumen.resumen_contratos.contratos_activos }}</h1>
+                <p class="text-muted">Contratos activos</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reporte de ingresos por período -->
+<div class="card border-0 shadow-sm p-4 mb-4">
+    <h5 class="fw-bold mb-3">
+        <i class="bi bi-calendar-range text-info"></i> Ingresos por Período
+    </h5>
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <label class="form-label">Fecha inicio</label>
+            <input type="date" name="fecha_inicio" class="form-control"
+                   value="{{ fecha_inicio or '' }}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Fecha fin</label>
+            <input type="date" name="fecha_fin" class="form-control"
+                   value="{{ fecha_fin or '' }}">
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primario w-100">
+                <i class="bi bi-search"></i> Consultar
+            </button>
+        </div>
+    </form>
+
+    {% if ingresos %}
+    <div class="row text-center mb-3">
+        <div class="col-md-4">
+            <h4 class="fw-bold text-success">Bs. {{ ingresos.total_ingresos }}</h4>
+            <small class="text-muted">Total ingresos</small>
+        </div>
+        <div class="col-md-4">
+            <h4 class="fw-bold text-primary">{{ ingresos.cantidad_pagos }}</h4>
+            <small class="text-muted">Pagos cobrados</small>
+        </div>
+        <div class="col-md-4">
+            <h4 class="fw-bold text-info">Bs. {{ ingresos.promedio_por_pago }}</h4>
+            <small class="text-muted">Promedio por pago</small>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Deudores -->
+<div class="card border-0 shadow-sm p-4">
+    <h5 class="fw-bold mb-3">
+        <i class="bi bi-exclamation-triangle text-danger"></i> Inquilinos con Deuda
+    </h5>
+    {% if deudores.total_deudores > 0 %}
+    <div class="alert alert-danger">
+        <strong>{{ deudores.total_deudores }}</strong> inquilinos con deuda total de
+        <strong>Bs. {{ deudores.deuda_total_sistema }}</strong>
+    </div>
+    <div class="card tabla-sistema border-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Inquilino</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Pagos vencidos</th>
+                    <th>Total deuda</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for deudor in deudores.detalle %}
+                <tr>
+                    <td><strong>{{ deudor.nombre }}</strong></td>
+                    <td>{{ deudor.correo }}</td>
+                    <td>{{ deudor.telefono }}</td>
+                    <td>
+                        <span class="badge badge-vencido">{{ deudor.pagos_vencidos }}</span>
+                    </td>
+                    <td><strong class="text-danger">Bs. {{ deudor.total_deuda }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center text-muted py-3">
+        <i class="bi bi-check-circle fs-3 text-success"></i>
+        <p class="mt-2">No hay inquilinos con deuda</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block titulo %}Inicio — Sistema de Alquiler{% endblock %}
+
+{% block contenido %}
+<div class="bienvenida">
+    <i class="bi bi-building" style="font-size:4rem; color:#2C3E50;"></i>
+    <h1 class="mt-3">Bienvenido, {{ propietario.nombre }}</h1>
+    <p class="text-muted fs-5">Panel de control del sistema de cobros de alquiler</p>
+</div>
+
+<!-- Tarjetas de resumen -->
+<div class="row g-4 mt-2">
+    <div class="col-md-3">
+        <div class="card tarjeta-resumen tarjeta-azul p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 opacity-75">Habitaciones</p>
+                    <h2 class="mb-0 fw-bold">{{ resumen.resumen_habitaciones.total }}</h2>
+                    <small>{{ resumen.resumen_habitaciones.ocupadas }} ocupadas</small>
+                </div>
+                <i class="bi bi-door-open icono"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card tarjeta-resumen tarjeta-verde p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 opacity-75">Contratos activos</p>
+                    <h2 class="mb-0 fw-bold">{{ resumen.resumen_contratos.contratos_activos }}</h2>
+                    <small>Vigentes</small>
+                </div>
+                <i class="bi bi-file-text icono"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card tarjeta-resumen tarjeta-naranja p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 opacity-75">Ingresos del mes</p>
+                    <h2 class="mb-0 fw-bold">Bs. {{ resumen.resumen_financiero.ingresos_mes_actual }}</h2>
+                    <small>Mes actual</small>
+                </div>
+                <i class="bi bi-cash-coin icono"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card tarjeta-resumen tarjeta-rojo p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 opacity-75">Deuda vencida</p>
+                    <h2 class="mb-0 fw-bold">Bs. {{ resumen.resumen_financiero.total_deuda_vencida }}</h2>
+                    <small>Por cobrar</small>
+                </div>
+                <i class="bi bi-exclamation-circle icono"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Accesos rápidos -->
+<div class="row g-4 mt-2">
+    <div class="col-12">
+        <h5 class="fw-bold text-secondary">Accesos rápidos</h5>
+    </div>
+    <div class="col-md-2">
+        <a href="/vistas/habitaciones" class="text-decoration-none">
+            <div class="card text-center p-3 tarjeta-resumen">
+                <i class="bi bi-door-open fs-2 text-primary"></i>
+                <p class="mt-2 mb-0 fw-semibold">Habitaciones</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-2">
+        <a href="/vistas/inquilinos" class="text-decoration-none">
+            <div class="card text-center p-3 tarjeta-resumen">
+                <i class="bi bi-people fs-2 text-success"></i>
+                <p class="mt-2 mb-0 fw-semibold">Inquilinos</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-2">
+        <a href="/vistas/contratos" class="text-decoration-none">
+            <div class="card text-center p-3 tarjeta-resumen">
+                <i class="bi bi-file-text fs-2 text-warning"></i>
+                <p class="mt-2 mb-0 fw-semibold">Contratos</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-2">
+        <a href="/vistas/pagos" class="text-decoration-none">
+            <div class="card text-center p-3 tarjeta-resumen">
+                <i class="bi bi-cash-coin fs-2 text-danger"></i>
+                <p class="mt-2 mb-0 fw-semibold">Pagos</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-2">
+        <a href="/vistas/reportes" class="text-decoration-none">
+            <div class="card text-center p-3 tarjeta-resumen">
+                <i class="bi bi-bar-chart fs-2 text-info"></i>
+                <p class="mt-2 mb-0 fw-semibold">Reportes</p>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}
